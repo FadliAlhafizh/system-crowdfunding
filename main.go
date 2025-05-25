@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 )
 
 const MAXPROYEK int = 10
@@ -54,6 +55,20 @@ func deleteProyek(id *int) {
 			currentIndex--
 			return
 		}
+	}
+}
+
+func sequentialSearch(keyword *string) {
+	fmt.Scan(keyword)
+	found := false
+	for i := 0; i < currentIndex; i++ {
+		if strings.EqualFold(listProyeks[i].Name, *keyword) || strings.EqualFold(listProyeks[i].Kategori, *keyword) {
+			fmt.Println(listProyeks[i])
+			found = true
+		}
+	}
+	if !found {
+		fmt.Println("Proyek tidak ditemukan")
 	}
 }
 
