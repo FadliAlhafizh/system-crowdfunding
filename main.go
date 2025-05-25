@@ -58,6 +58,24 @@ func deleteProyek(id *int) {
 	}
 }
 
+func searchProject() {
+
+	var pilih int
+
+	fmt.Println("1. Sequential Search")
+	fmt.Println("2. Binary Search")
+	fmt.Println("Pilih metode pencarian: ")
+
+	switch pilih {
+	case 1:
+		//sequentialSearch()
+	case 2:
+		//binarySearch()
+	default:
+		fmt.Println("Pilihan tidak valid")
+	}
+}
+
 func sequentialSearch(keyword *string) {
 	fmt.Scan(keyword)
 	found := false
@@ -70,6 +88,25 @@ func sequentialSearch(keyword *string) {
 	if !found {
 		fmt.Println("Proyek tidak ditemukan")
 	}
+}
+
+func binarySearch(name string, kategori string) int {
+	var left, right int
+	left = 0
+	right = 0
+
+	for left <= right {
+		var mid int
+		mid = (left + right) / 2
+		if listProyeks[mid].Name == name || listProyeks[mid].Kategori == kategori {
+			return mid
+		} else if listProyeks[mid].Name < name || listProyeks[mid].Kategori < kategori {
+			left = mid + 1
+		} else {
+			right = mid - 1
+		}
+	}
+	return -1
 }
 
 func menu() {
