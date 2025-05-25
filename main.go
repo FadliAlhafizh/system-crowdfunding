@@ -76,11 +76,11 @@ func searchProject() {
 	}
 }
 
-func sequentialSearch(keyword *string) {
-	fmt.Scan(keyword)
+func sequentialSearch(kategori *string) {
+	fmt.Scan(kategori)
 	found := false
 	for i := 0; i < currentIndex; i++ {
-		if strings.EqualFold(listProyeks[i].Name, *keyword) || strings.EqualFold(listProyeks[i].Kategori, *keyword) {
+		if strings.EqualFold(listProyeks[i].Name, *kategori) || strings.EqualFold(listProyeks[i].Kategori, *kategori) {
 			fmt.Println(listProyeks[i])
 			found = true
 		}
@@ -111,6 +111,16 @@ func binarySearch(name string, kategori string) int {
 
 func menu() {
 
+	fmt.Println("=== Sistem Proyek Crowdfunding ===")
+	fmt.Println("1. Tambah Proyek")
+	fmt.Println("2. Ubah Proyek")
+	fmt.Println("3. Hapus Proyek")
+	fmt.Println("4. Cari Proyek")
+	fmt.Println("5. Urutkan Proyek")
+	fmt.Println("6. Tampilkan Proyek dengan Target Tercapai")
+	fmt.Println("7. Tampilkan Semua Proyek")
+	fmt.Println("0. Keluar")
+	fmt.Print("Pilih menu: ")
 }
 
 func cetak(name string, kategori string, totalDonasi float64, totalDonatur int) {
