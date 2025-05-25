@@ -33,12 +33,28 @@ func addProyek(name *string, kategori *string, donasi *float64, total *int) {
 	currentID++
 }
 
-func editProyek() {
-
+func editProyek(id *int, name *string, kategori *string, donasi *float64, total *int) {
+	for i := 0; i < currentIndex; i++ {
+		if listProyeks[i].ID == *id {
+			listProyeks[i].Name = *name
+			listProyeks[i].Kategori = *kategori
+			listProyeks[i].TotalDonasi = *donasi
+			listProyeks[i].TotalDonatur = *total
+			return
+		}
+	}
 }
 
-func deleteProyek() {
-
+func deleteProyek(id *int) {
+	for i := 0; i < currentIndex; i++ {
+		if listProyeks[i].ID == *id {
+			for j := i; j < currentIndex-1; j++ {
+				listProyeks[j] = listProyeks[j+1]
+			}
+			currentIndex--
+			return
+		}
+	}
 }
 
 func menu() {
