@@ -25,18 +25,33 @@ func isKategori(kategori string) bool {
 }
 
 func addProyek(name *string, kategori *string, targetDonasi *float64) {
-
-	fmt.Println("Masukan Nama Proyek: ")
+	fmt.Println("Masukkan Nama Proyek: ")
 	fmt.Scan(name)
 
 	for {
-		fmt.Println("Pilih kategori berikut: 1. Kesehatan/2. Pendidikan/3. Pendanaan")
-		fmt.Scan(kategori)
-		if isKategori(*kategori) {
+		var pilihanKategori int
+		fmt.Println("Pilih kategori:")
+		fmt.Println("1. Kesehatan")
+		fmt.Println("2. Pendidikan")
+		fmt.Println("3. Pendanaan")
+		fmt.Print("Pilihan Anda: ")
+		fmt.Scan(&pilihanKategori)
+
+		if pilihanKategori == 1 {
+			*kategori = "kesehatan"
 			break
+		} else if pilihanKategori == 2 {
+			*kategori = "pendidikan"
+			break
+		} else if pilihanKategori == 3 {
+			*kategori = "pendanaan"
+			break
+		} else {
+			fmt.Println("Pilihan kategori tidak valid.")
 		}
 	}
-	fmt.Print("Masukan Target Donasi: ")
+
+	fmt.Print("Masukkan Target Donasi: ")
 	fmt.Scan(targetDonasi)
 	fmt.Println()
 
@@ -52,64 +67,174 @@ func addProyek(name *string, kategori *string, targetDonasi *float64) {
 	currentID++
 }
 
-func editProyek(id *int, name *string, kategori *string, targetDonasi *float64, total *int) {
+func editProyek() {
+	var id int
+	var name, kategori string
+	var targetDonasi float64
+
+	fmt.Print("Masukkan ID proyek yang ingin diubah: ")
+	fmt.Scan(&id)
+
+	found := false
 	for i := 0; i < currentIndex; i++ {
-		if listProyeks[i].ID == *id {
-			listProyeks[i].Name = *name
-			listProyeks[i].Kategori = *kategori
-			listProyeks[i].TargetDonasi = *targetDonasi
-			listProyeks[i].TotalDonatur = *total
-			return
+		if listProyeks[i].ID == id {
+			found = true
+			fmt.Printf("Proyek ditemukan: %s\n", listProyeks[i].Name)
+			fmt.Print("Masukkan nama baru: ")
+			fmt.Scan(&name)
+
+			for {
+				var pilihanKategori int
+				fmt.Println("Pilih kategori baru:")
+				fmt.Println("1. Kesehatan")
+				fmt.Println("2. Pendidikan")
+				fmt.Println("3. Pendanaan")
+				fmt.Print("Pilihan Anda: ")
+				fmt.Scan(&pilihanKategori)
+
+				if pilihanKategori == 1 {
+					kategori = "kesehatan"
+					break
+				} else if pilihanKategori == 2 {
+					kategori = "pendidikan"
+					break
+				} else if pilihanKategori == 3 {
+					kategori = "pendanaan"
+					break
+				} else {
+					fmt.Println("Kategori tidak valid.")
+				}
+			}
+
+			fmt.Print("Masukkan target donasi baru: ")
+			fmt.Scan(&targetDonasi)
+
+			listProyeks[i].Name = name
+			listProyeks[i].Kategori = kategori
+			listProyeks[i].TargetDonasi = targetDonasi
+			fmt.Println("Data proyek berhasil diubah.")
+			break
 		}
+	}
+	if !found {
+		fmt.Println("Proyek dengan ID tersebut tidak ditemukan.")
 	}
 }
 
-func deleteProyek(id *int) {
+func deleteProyek() {
+	var id int
+	fmt.Print("Masukkan ID proyek yang ingin dihapus: ")
+	fmt.Scan(&id)
+
+	found := false
 	for i := 0; i < currentIndex; i++ {
-		if listProyeks[i].ID == *id {
+		if listProyeks[i].ID == id {
 			for j := i; j < currentIndex-1; j++ {
 				listProyeks[j] = listProyeks[j+1]
 			}
 			currentIndex--
-			return
+			fmt.Println("Proyek berhasil dihapus.")
+			found = true
+			break
 		}
+	}
+	if !found {
+		fmt.Println("Proyek dengan ID tersebut tidak ditemukan.")
+	}
+}
+
+func donasiProyek() {
+	var id int
+	var jumlahDonasi float64
+
+	fmt.Print("Masukkan ID proyek yang ingin Anda donasi: ")
+	fmt.Scan(&id)
+
+	found := false
+	for i := 0; i < currentIndex; i++ {
+		if listProyeks[i].ID == id {
+			found = true
+			fmt.Printf("Anda akan berdonasi untuk proyek: %s\n", listProyeks[i].Name)
+			fmt.Print("Masukkan jumlah donasi: ")
+			fmt.Scan(&jumlahDonasi)
+
+			listProyeks[i].Donasi += jumlahDonasi
+			listProyeks[i].TotalDonatur++
+			fmt.Println("Terima kasih atas donasi Anda!")
+			break
+		}
+	}
+	if !found {
+		fmt.Println("Proyek tidak ditemukan.")
 	}
 }
 
 func searchProject() {
-
 	var metode int
 	var keyword string
 
-	fmt.Println("1. Sequential Search")
-	fmt.Println("2. Binary Search")
-	fmt.Println("Pilih metode pencarian: ")
+	fmt.Println("Pilih metode pencarian:")
+	fmt.Println("1. Cari berdasarkan NAMA (Sequential Search)")
+	fmt.Println("2. Cari berdasarkan KATEGORI (Sequential Search)")
+	fmt.Println("3. Cari berdasarkan NAMA (Binary Search)")
+	fmt.Print("Pilihan Anda: ")
 	fmt.Scan(&metode)
-
-	fmt.Print("Masukan kata kunci (nama/kategori)")
-	fmt.Scan(&keyword)
 
 	switch metode {
 	case 1:
-		sequentialSearch(keyword)
+		fmt.Print("Masukkan nama proyek: ")
+		fmt.Scan(&keyword)
+		sequentialSearchByName(keyword)
 	case 2:
+		fmt.Print("Masukkan kategori (kesehatan/pendidikan/pendanaan): ")
+		fmt.Scan(&keyword)
+		if isKategori(keyword) {
+			sequentialSearchByKategori(keyword)
+		} else {
+			fmt.Println("Kategori tidak valid.")
+		}
+	case 3:
+		fmt.Print("Masukkan nama proyek: ")
+		fmt.Scan(&keyword)
 		InsertionSortByName(listProyeks[:currentIndex], currentIndex)
-		binarySearch(keyword)
+		idx := binarySearch(keyword)
+		if idx != -1 {
+			cetak(listProyeks[idx].Name, listProyeks[idx].Kategori, listProyeks[idx].Donasi, listProyeks[idx].TotalDonatur, listProyeks[idx].TargetDonasi)
+		} else {
+			fmt.Println("Proyek tidak ditemukan.")
+		}
 	default:
-		fmt.Println("Pilihan tidak valid")
+		fmt.Println("Pilihan tidak valid.")
 	}
 }
 
-func sequentialSearch(keyword string) {
+func sequentialSearchByName(keyword string) {
 	found := false
+	keyword = strings.ToLower(keyword)
 	for i := 0; i < currentIndex; i++ {
-		if strings.EqualFold(listProyeks[i].Name, keyword) || strings.EqualFold(listProyeks[i].Kategori, keyword) {
-			fmt.Println(listProyeks[i])
+		nama := strings.ToLower(listProyeks[i].Name)
+		if nama == keyword {
+			cetak(listProyeks[i].Name, listProyeks[i].Kategori, listProyeks[i].Donasi, listProyeks[i].TotalDonatur, listProyeks[i].TargetDonasi)
 			found = true
 		}
 	}
 	if !found {
-		fmt.Println("Proyek tidak ditemukan")
+		fmt.Println("Proyek tidak ditemukan.")
+	}
+}
+
+func sequentialSearchByKategori(kategori string) {
+	found := false
+	kategori = strings.ToLower(kategori)
+	for i := 0; i < currentIndex; i++ {
+		kat := strings.ToLower(listProyeks[i].Kategori)
+		if kat == kategori {
+			cetak(listProyeks[i].Name, listProyeks[i].Kategori, listProyeks[i].Donasi, listProyeks[i].TotalDonatur, listProyeks[i].TargetDonasi)
+			found = true
+		}
+	}
+	if !found {
+		fmt.Println("Tidak ada proyek dengan kategori tersebut.")
 	}
 }
 
@@ -222,15 +347,19 @@ func menu() {
 	fmt.Println("5. Urutkan Proyek")
 	fmt.Println("6. Tampilkan Proyek dengan Target Tercapai")
 	fmt.Println("7. Tampilkan Semua Proyek")
+	fmt.Println("8. Donasi ke Proyek")
 	fmt.Println("0. Keluar")
 	fmt.Print("Pilih menu: ")
 }
 
-func cetak(name string, kategori string, totalDonasi float64, totalDonatur int) {
-	fmt.Print(name)
-	fmt.Print(kategori)
-	fmt.Print(totalDonasi)
-	fmt.Print(totalDonatur)
+func cetak(name string, kategori string, totalDonasi float64, totalDonatur int, targetDonasi float64) {
+	fmt.Println("===================================")
+	fmt.Println("Nama Proyek   :", name)
+	fmt.Println("Kategori      :", strings.Title(kategori))
+	fmt.Printf("Total Donasi  : Rp%.0f\n", totalDonasi)
+	fmt.Printf("Target Donasi : Rp%.0f\n", targetDonasi)
+	fmt.Println("Jumlah Donatur:", totalDonatur, "orang")
+	fmt.Println("===================================")
 }
 
 func tampilkanSemuaProyek() {
@@ -240,7 +369,7 @@ func tampilkanSemuaProyek() {
 	}
 	for i := 0; i < currentIndex; i++ {
 		p := listProyeks[i]
-		cetak(p.Name, p.Kategori, p.Donasi, p.TotalDonatur)
+		cetak(p.Name, p.Kategori, p.Donasi, p.TotalDonatur, p.TargetDonasi)
 	}
 }
 
@@ -249,7 +378,7 @@ func tampilkanProyekSukses() {
 	fmt.Println("=== Proyek yang Mencapai Target Donasi ===")
 	for i := 0; i < currentIndex; i++ {
 		if listProyeks[i].Donasi >= listProyeks[i].TargetDonasi {
-			cetak(listProyeks[i].Name, listProyeks[i].Kategori, listProyeks[i].Donasi, listProyeks[i].TotalDonatur)
+			cetak(listProyeks[i].Name, listProyeks[i].Kategori, listProyeks[i].Donasi, listProyeks[i].TotalDonatur, listProyeks[i].TargetDonasi)
 			found = true
 		}
 	}
@@ -271,9 +400,9 @@ func main() {
 			var targetDonasi float64
 			addProyek(&name, &kategori, &targetDonasi)
 		case 2:
-			// editProyek()
+			editProyek()
 		case 3:
-			// deleteProyek()
+			deleteProyek()
 		case 4:
 			searchProject()
 		case 5:
@@ -282,6 +411,8 @@ func main() {
 			tampilkanProyekSukses()
 		case 7:
 			tampilkanSemuaProyek()
+		case 8:
+			donasiProyek()
 		case 0:
 			fmt.Println("Terima kasih telah menggunakan sistem crowdfunding")
 			return
