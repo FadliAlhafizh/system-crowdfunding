@@ -78,27 +78,32 @@ func deleteProyek(id *int) {
 
 func searchProject() {
 
-	var pilih int
+	var metode int
+	var keyword string
 
 	fmt.Println("1. Sequential Search")
 	fmt.Println("2. Binary Search")
 	fmt.Println("Pilih metode pencarian: ")
+	fmt.Scan(&metode)
 
-	switch pilih {
+	fmt.Print("Masukan kata kunci (nama/kategori)")
+	fmt.Scan(&keyword)
+
+	switch metode {
 	case 1:
-		//sequentialSearch()
+		sequentialSearch(keyword)
 	case 2:
-		//binarySearch()
+		InsertionSortByName(listProyeks[:currentIndex], currentIndex)
+		binarySearch(keyword)
 	default:
 		fmt.Println("Pilihan tidak valid")
 	}
 }
 
-func sequentialSearch(kategori *string) {
-	fmt.Scan(kategori)
+func sequentialSearch(keyword string) {
 	found := false
 	for i := 0; i < currentIndex; i++ {
-		if strings.EqualFold(listProyeks[i].Name, *kategori) || strings.EqualFold(listProyeks[i].Kategori, *kategori) {
+		if strings.EqualFold(listProyeks[i].Name, keyword) || strings.EqualFold(listProyeks[i].Kategori, keyword) {
 			fmt.Println(listProyeks[i])
 			found = true
 		}
@@ -108,7 +113,7 @@ func sequentialSearch(kategori *string) {
 	}
 }
 
-func binarySearch(name string, kategori string) int {
+func binarySearch(keyword string) int {
 	var left, right int
 	left = 0
 	right = 0
@@ -116,9 +121,9 @@ func binarySearch(name string, kategori string) int {
 	for left <= right {
 		var mid int
 		mid = (left + right) / 2
-		if listProyeks[mid].Name == name || listProyeks[mid].Kategori == kategori {
+		if listProyeks[mid].Name == keyword || listProyeks[mid].Kategori == keyword {
 			return mid
-		} else if listProyeks[mid].Name < name || listProyeks[mid].Kategori < kategori {
+		} else if listProyeks[mid].Name < keyword || listProyeks[mid].Kategori < keyword {
 			left = mid + 1
 		} else {
 			right = mid - 1
@@ -153,6 +158,18 @@ func SelectionSortByDonors(projects []proyek) {
 	}
 }
 
+func InsertionSortByName(projects []proyek, n int) {
+	for i := 1; i < n; i++ {
+		key := projects[i]
+		j := i - 1
+		for j >= 0 && projects[j].Name > key.Name {
+			projects[j+1] = projects[j]
+			j--
+		}
+		projects[j+1] = key
+	}
+}
+
 func InsertionSortByRaised(proyek []proyek, n int) {
 	for i := 1; i < n; i++ {
 		idx := proyek[i]
@@ -174,6 +191,24 @@ func InsertionSortByDonors(proyek []proyek, n int) {
 			j--
 		}
 		proyek[j+1] = idx
+	}
+}
+
+func sortingMenu() {
+	var pilih int
+	fmt.Println("1. Urutkan berdasarkan Target Donasi ")
+	fmt.Println("2. Urutkan berdasarkan Total Donatur ")
+	fmt.Scan(&pilih)
+
+	switch pilih {
+	case 1:
+		SelectionSortByRaised(listProyeks[:currentIndex])
+	case 2:
+		SelectionSortByDonors(listProyeks[:currentIndex])
+	case 3:
+		InsertionSortByRaised(listProyeks[:currentIndex], currentIndex)
+	case 4:
+		InsertionSortByDonors(listProyeks[:currentIndex], currentIndex)
 	}
 }
 
@@ -224,11 +259,34 @@ func tampilkanProyekSukses() {
 }
 
 func main() {
-	var name string
-	var kategori string
-	var totalDonasi float64
-	var totalDonatur int
 
-	addProyek(&name, &kategori, &totalDonasi)
-	cetak(name, kategori, totalDonasi, totalDonatur)
+	for {
+		menu()
+		var pilihan int
+		fmt.Scan(&pilihan)
+
+		switch pilihan {
+		case 1:
+			var name, kategori string
+			var targetDonasi float64
+			addProyek(&name, &kategori, &targetDonasi)
+		case 2:
+			// editProyek()
+		case 3:
+			// deleteProyek()
+		case 4:
+			searchProject()
+		case 5:
+			sortingMenu()
+		case 6:
+			tampilkanProyekSukses()
+		case 7:
+			tampilkanSemuaProyek()
+		case 0:
+			fmt.Println("Terima kasih telah menggunakan sistem crowdfunding")
+			return
+		default:
+			fmt.Println("Menu tidak valid")
+		}
+	}
 }
