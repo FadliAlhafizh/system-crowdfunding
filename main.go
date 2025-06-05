@@ -109,6 +109,32 @@ func binarySearch(name string, kategori string) int {
 	return -1
 }
 
+func SelectionSortByRaised(projects []proyek) {
+	n := len(projects)
+	for i := 0; i < n-1; i++ {
+		maxIdx := i
+		for j := i + 1; j < n; j++ {
+			if projects[j].TotalDonasi > projects[maxIdx].TotalDonasi {
+				maxIdx = j
+			}
+		}
+		projects[i], projects[maxIdx] = projects[maxIdx], projects[i]
+	}
+}
+
+func SelectionSortByDonors(projects []proyek) {
+	n := len(projects)
+	for i := 0; i < n-1; i++ {
+		maxIdx := i
+		for j := i + 1; j < n; j++ {
+			if projects[j].TotalDonatur > projects[maxIdx].TotalDonatur {
+				maxIdx = j
+			}
+		}
+		projects[i], projects[maxIdx] = projects[maxIdx], projects[i]
+	}
+}
+
 func menu() {
 
 	fmt.Println("=== Sistem Proyek Crowdfunding ===")
