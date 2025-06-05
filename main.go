@@ -11,7 +11,8 @@ type proyek struct {
 	ID           int
 	Name         string
 	Kategori     string
-	TotalDonasi  float64
+	Donasi       float64
+	TargetDonasi float64
 	TotalDonatur int
 }
 
@@ -19,27 +20,44 @@ var currentIndex = 0
 var currentID = 1
 var listProyeks [MAXPROYEK]proyek
 
-func addProyek(name *string, kategori *string, donasi *float64, total *int) {
+func isKategori(kategori string) bool {
+	return kategori == "kesehatan" || kategori == "pendidikan" || kategori == "pendanaan"
+}
 
-	fmt.Scan(name, kategori, donasi, total)
+func addProyek(name *string, kategori *string, targetDonasi *float64) {
+
+	fmt.Println("Masukan Nama Proyek: ")
+	fmt.Scan(name)
+
+	for {
+		fmt.Println("Pilih kategori berikut: 1. Kesehatan/2. Pendidikan/3. Pendanaan")
+		fmt.Scan(kategori)
+		if isKategori(*kategori) {
+			break
+		}
+	}
+	fmt.Print("Masukan Target Donasi: ")
+	fmt.Scan(targetDonasi)
+	fmt.Println()
 
 	listProyeks[currentIndex] = proyek{
 		ID:           currentID,
 		Name:         *name,
 		Kategori:     *kategori,
-		TotalDonasi:  *donasi,
-		TotalDonatur: *total,
+		Donasi:       0,
+		TargetDonasi: *targetDonasi,
+		TotalDonatur: 0,
 	}
 	currentIndex++
 	currentID++
 }
 
-func editProyek(id *int, name *string, kategori *string, donasi *float64, total *int) {
+func editProyek(id *int, name *string, kategori *string, targetDonasi *float64, total *int) {
 	for i := 0; i < currentIndex; i++ {
 		if listProyeks[i].ID == *id {
 			listProyeks[i].Name = *name
 			listProyeks[i].Kategori = *kategori
-			listProyeks[i].TotalDonasi = *donasi
+			listProyeks[i].TargetDonasi = *targetDonasi
 			listProyeks[i].TotalDonatur = *total
 			return
 		}
@@ -114,7 +132,7 @@ func SelectionSortByRaised(projects []proyek) {
 	for i := 0; i < n-1; i++ {
 		maxIdx := i
 		for j := i + 1; j < n; j++ {
-			if projects[j].TotalDonasi > projects[maxIdx].TotalDonasi {
+			if projects[j].TargetDonasi > projects[maxIdx].TargetDonasi {
 				maxIdx = j
 			}
 		}
@@ -139,7 +157,7 @@ func InsertionSortByRaised(proyek []proyek, n int) {
 	for i := 1; i < n; i++ {
 		idx := proyek[i]
 		j := i - 1
-		for j >= 0 && proyek[j].TotalDonasi < idx.TotalDonasi {
+		for j >= 0 && proyek[j].TargetDonasi < idx.TargetDonasi {
 			proyek[j+1] = proyek[j]
 			j--
 		}
@@ -186,6 +204,6 @@ func main() {
 	var totalDonasi float64
 	var totalDonatur int
 
-	addProyek(&name, &kategori, &totalDonasi, &totalDonatur)
+	addProyek(&name, &kategori, &totalDonasi)
 	cetak(name, kategori, totalDonasi, totalDonatur)
 }
