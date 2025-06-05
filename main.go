@@ -198,7 +198,7 @@ func cetak(name string, kategori string, totalDonasi float64, totalDonatur int) 
 	fmt.Print(totalDonatur)
 }
 
-func tampilkanSemua() {
+func tampilkanSemuaProyek() {
 	if currentIndex == 0 {
 		fmt.Println("Belum ada proyek yang terdaftar.")
 		return
@@ -206,6 +206,20 @@ func tampilkanSemua() {
 	for i := 0; i < currentIndex; i++ {
 		p := listProyeks[i]
 		cetak(p.Name, p.Kategori, p.Donasi, p.TotalDonatur)
+	}
+}
+
+func tampilkanProyekSukses() {
+	found := false
+	fmt.Println("=== Proyek yang Mencapai Target Donasi ===")
+	for i := 0; i < currentIndex; i++ {
+		if listProyeks[i].Donasi >= listProyeks[i].TargetDonasi {
+			cetak(listProyeks[i].Name, listProyeks[i].Kategori, listProyeks[i].Donasi, listProyeks[i].TotalDonatur)
+			found = true
+		}
+	}
+	if !found {
+		fmt.Println("Belum ada proyek yang mencapai target.")
 	}
 }
 
