@@ -198,6 +198,17 @@ func cetak(name string, kategori string, totalDonasi float64, totalDonatur int) 
 	fmt.Print(totalDonatur)
 }
 
+func tampilkanSemua() {
+	if currentIndex == 0 {
+		fmt.Println("Belum ada proyek yang terdaftar.")
+		return
+	}
+	for i := 0; i < currentIndex; i++ {
+		p := listProyeks[i]
+		cetak(p.Name, p.Kategori, p.Donasi, p.TotalDonatur)
+	}
+}
+
 func main() {
 	var name string
 	var kategori string
