@@ -68,16 +68,15 @@ func addProyek(name *string, kategori *string, targetDonasi *float64) {
 }
 
 func editProyek() {
-	var id int
 	var name, kategori string
 	var targetDonasi float64
 
 	fmt.Print("Masukkan ID proyek yang ingin diubah: ")
-	fmt.Scan(&id)
+	fmt.Scan(&name)
 
 	found := false
 	for i := 0; i < currentIndex; i++ {
-		if listProyeks[i].ID == id {
+		if listProyeks[i].Name == name {
 			found = true
 			fmt.Printf("Proyek ditemukan: %s\n", listProyeks[i].Name)
 			fmt.Print("Masukkan nama baru: ")
@@ -122,13 +121,13 @@ func editProyek() {
 }
 
 func deleteProyek() {
-	var id int
+	var name string
 	fmt.Print("Masukkan ID proyek yang ingin dihapus: ")
-	fmt.Scan(&id)
+	fmt.Scan(&name)
 
 	found := false
 	for i := 0; i < currentIndex; i++ {
-		if listProyeks[i].ID == id {
+		if listProyeks[i].Name == name {
 			for j := i; j < currentIndex-1; j++ {
 				listProyeks[j] = listProyeks[j+1]
 			}
@@ -143,30 +142,22 @@ func deleteProyek() {
 	}
 }
 
-func donasiProyek() {
-	var id int
-	var jumlahDonasi float64
+func donasiProyek(name *string, donasi float64) {
+	fmt.Print("Masukkan ID Proyek: ")
+	fmt.Scan(name)
 
-	fmt.Print("Masukkan ID proyek yang ingin Anda donasi: ")
-	fmt.Scan(&id)
-
-	found := false
 	for i := 0; i < currentIndex; i++ {
-		if listProyeks[i].ID == id {
-			found = true
-			fmt.Printf("Anda akan berdonasi untuk proyek: %s\n", listProyeks[i].Name)
+		if listProyeks[i].Name == *name {
 			fmt.Print("Masukkan jumlah donasi: ")
-			fmt.Scan(&jumlahDonasi)
+			fmt.Scan(&donasi)
 
-			listProyeks[i].Donasi += jumlahDonasi
+			listProyeks[i].Donasi += donasi
 			listProyeks[i].TotalDonatur++
-			fmt.Println("Terima kasih atas donasi Anda!")
-			break
+			fmt.Println("Donasi berhasil ditambahkan!")
+			return
 		}
 	}
-	if !found {
-		fmt.Println("Proyek tidak ditemukan.")
-	}
+	fmt.Println("Proyek tidak ditemukan.")
 }
 
 func searchProject() {
@@ -412,7 +403,9 @@ func main() {
 		case 7:
 			tampilkanSemuaProyek()
 		case 8:
-			donasiProyek()
+			var name string
+			var donasi float64
+			donasiProyek(&name, donasi)
 		case 0:
 			fmt.Println("Terima kasih telah menggunakan sistem crowdfunding")
 			return
