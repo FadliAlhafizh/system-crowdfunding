@@ -135,6 +135,30 @@ func SelectionSortByDonors(projects []proyek) {
 	}
 }
 
+func InsertionSortByRaised(proyek []proyek, n int) {
+	for i := 1; i < n; i++ {
+		idx := proyek[i]
+		j := i - 1
+		for j >= 0 && proyek[j].TotalDonasi < idx.TotalDonasi {
+			proyek[j+1] = proyek[j]
+			j--
+		}
+		proyek[j+1] = idx
+	}
+}
+
+func InsertionSortByDonors(proyek []proyek, n int) {
+	for i := 1; i < n; i++ {
+		idx := proyek[i]
+		j := i - 1
+		for j >= 0 && float64(proyek[j].TotalDonatur) < float64(idx.TotalDonatur) {
+			proyek[j+1] = proyek[j]
+			j--
+		}
+		proyek[j+1] = idx
+	}
+}
+
 func menu() {
 
 	fmt.Println("=== Sistem Proyek Crowdfunding ===")
