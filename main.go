@@ -37,18 +37,21 @@ func addProyek(name *string, kategori *string, targetDonasi *float64) {
 		fmt.Print("Pilihan Anda: ")
 		fmt.Scan(&pilihanKategori)
 
-		if pilihanKategori == 1 {
+		switch pilihanKategori {
+		case 1:
 			*kategori = "kesehatan"
 			break
-		} else if pilihanKategori == 2 {
+		case 2:
 			*kategori = "pendidikan"
 			break
-		} else if pilihanKategori == 3 {
+		case 3:
 			*kategori = "pendanaan"
 			break
-		} else {
-			fmt.Println("Pilihan kategori tidak valid.")
+		default:
+			fmt.Println("Pilihan tidak valid.")
+			continue
 		}
+		break
 	}
 
 	fmt.Print("Masukkan Target Donasi: ")
@@ -138,12 +141,12 @@ func deleteProyek() {
 		}
 	}
 	if !found {
-		fmt.Println("Proyek dengan ID tersebut tidak ditemukan.")
+		fmt.Println("Proyek dengan Nama tersebut tidak ditemukan.")
 	}
 }
 
 func donasiProyek(name *string, donasi float64) {
-	fmt.Print("Masukkan ID Proyek: ")
+	fmt.Print("Masukkan Nama Proyek: ")
 	fmt.Scan(name)
 
 	for i := 0; i < currentIndex; i++ {
@@ -326,6 +329,8 @@ func sortingMenu() {
 	case 4:
 		InsertionSortByDonors(listProyeks[:currentIndex], currentIndex)
 	}
+
+	tampilkanSemuaProyek()
 }
 
 func menu() {
