@@ -71,7 +71,7 @@ func editProyek() {
 	var name, kategori string
 	var targetDonasi float64
 
-	fmt.Print("Masukkan ID proyek yang ingin diubah: ")
+	fmt.Print("Masukkan nama proyek yang ingin diubah: ")
 	fmt.Scan(&name)
 
 	found := false
@@ -122,7 +122,7 @@ func editProyek() {
 
 func deleteProyek() {
 	var name string
-	fmt.Print("Masukkan ID proyek yang ingin dihapus: ")
+	fmt.Print("Masukkan nama proyek yang ingin dihapus: ")
 	fmt.Scan(&name)
 
 	found := false
@@ -138,12 +138,12 @@ func deleteProyek() {
 		}
 	}
 	if !found {
-		fmt.Println("Proyek dengan ID tersebut tidak ditemukan.")
+		fmt.Println("Proyek dengan nama tersebut tidak ditemukan.")
 	}
 }
 
 func donasiProyek(name *string, donasi float64) {
-	fmt.Print("Masukkan ID Proyek: ")
+	fmt.Print("Masukkan nama Proyek: ")
 	fmt.Scan(name)
 
 	for i := 0; i < currentIndex; i++ {
