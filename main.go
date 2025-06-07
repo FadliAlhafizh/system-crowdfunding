@@ -171,6 +171,7 @@ func searchProject() {
 	fmt.Println("1. Cari berdasarkan NAMA (Sequential Search)")
 	fmt.Println("2. Cari berdasarkan KATEGORI (Sequential Search)")
 	fmt.Println("3. Cari berdasarkan NAMA (Binary Search)")
+	fmt.Println("3. Cari berdasarkan KATEGORI (KATEGORI Search)")
 	fmt.Print("Pilihan Anda: ")
 	fmt.Scan(&metode)
 
@@ -191,7 +192,17 @@ func searchProject() {
 		fmt.Print("Masukkan nama proyek: ")
 		fmt.Scan(&keyword)
 		InsertionSortByName(listProyeks[:currentIndex], currentIndex)
-		idx := binarySearch(keyword)
+		idx := binarySearchByName(keyword)
+		if idx != -1 {
+			cetak(listProyeks[idx].Name, listProyeks[idx].Kategori, listProyeks[idx].Donasi, listProyeks[idx].TotalDonatur, listProyeks[idx].TargetDonasi)
+		} else {
+			fmt.Println("Proyek tidak ditemukan.")
+		}
+	case 4:
+		fmt.Print("Masukkan nama proyek: ")
+		fmt.Scan(&keyword)
+		InsertionSortByKategori(listProyeks[:currentIndex], currentIndex)
+		idx := binarySearchByKategori(keyword)
 		if idx != -1 {
 			cetak(listProyeks[idx].Name, listProyeks[idx].Kategori, listProyeks[idx].Donasi, listProyeks[idx].TotalDonatur, listProyeks[idx].TargetDonasi)
 		} else {
@@ -232,17 +243,36 @@ func sequentialSearchByKategori(kategori string) {
 	}
 }
 
-func binarySearch(keyword string) int {
+func binarySearchByName(keyword string) int {
 	var left, right int
 	left = 0
-	right = 0
+	right = currentIndex - 1
 
 	for left <= right {
 		var mid int
 		mid = (left + right) / 2
-		if listProyeks[mid].Name == keyword || listProyeks[mid].Kategori == keyword {
+		if listProyeks[mid].Name == keyword {
 			return mid
-		} else if listProyeks[mid].Name < keyword || listProyeks[mid].Kategori < keyword {
+		} else if listProyeks[mid].Name < keyword {
+			left = mid + 1
+		} else {
+			right = mid - 1
+		}
+	}
+	return -1
+}
+
+func binarySearchByKategori(keyword string) int {
+	var left, right int
+	left = 0
+	right = currentIndex - 1
+
+	for left <= right {
+		var mid int
+		mid = (left + right) / 2
+		if listProyeks[mid].Kategori == keyword {
+			return mid
+		} else if listProyeks[mid].Kategori < keyword {
 			left = mid + 1
 		} else {
 			right = mid - 1
@@ -282,6 +312,18 @@ func InsertionSortByName(projects []proyek, n int) {
 		key := projects[i]
 		j := i - 1
 		for j >= 0 && projects[j].Name > key.Name {
+			projects[j+1] = projects[j]
+			j--
+		}
+		projects[j+1] = key
+	}
+}
+
+func InsertionSortByKategori(projects []proyek, n int) {
+	for i := 1; i < n; i++ {
+		key := projects[i]
+		j := i - 1
+		for j >= 0 && projects[j].Kategori > key.Kategori {
 			projects[j+1] = projects[j]
 			j--
 		}
