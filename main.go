@@ -33,10 +33,13 @@ func addProyek(name *string, kategori *string, targetDonasi *float64) {
 	 * memilih no 1. kesehatan 2. pendidikan dan 3. pendanaan dan juga
 	 * menentukan target donasi.
 	 */
+	var found bool
 	fmt.Println("Masukkan Nama Proyek: ")
 	fmt.Scan(name)
 
-	for {
+	found = false
+
+	for !found {
 		var pilihanKategori int
 		fmt.Println("Pilih kategori:")
 		fmt.Println("1. Kesehatan")
@@ -48,18 +51,17 @@ func addProyek(name *string, kategori *string, targetDonasi *float64) {
 		switch pilihanKategori {
 		case 1:
 			*kategori = "kesehatan"
-			break
+			found = true
 		case 2:
 			*kategori = "pendidikan"
-			break
+			found = true
 		case 3:
 			*kategori = "pendanaan"
-			break
+			found = true
 		default:
 			fmt.Println("Pilihan tidak valid.")
-			continue
+			found = false
 		}
-		break
 	}
 
 	fmt.Print("Masukkan Target Donasi: ")
@@ -82,15 +84,16 @@ func editProyek() {
 	/*
 	 * mengubah proyek berdasarkan nama, dapat merubah nama, kategori serta mengubah target donasi
 	 */
+	var id int
 	var name, kategori string
 	var targetDonasi float64
 
-	fmt.Print("Masukkan nama proyek yang ingin diubah: ")
-	fmt.Scan(&name)
+	fmt.Print("Masukkan ID proyek yang ingin diubah: ")
+	fmt.Scan(&id)
 
 	found := false
 	for i := 0; i < currentIndex; i++ {
-		if listProyeks[i].Name == name {
+		if listProyeks[i].ID == id {
 			found = true
 			fmt.Printf("Proyek ditemukan: %s\n", listProyeks[i].Name)
 			fmt.Print("Masukkan nama baru: ")
@@ -140,20 +143,19 @@ func deleteProyek() {
 	/*
 	 * menghapus proyek berdasarkan nama yang ingin dihapus
 	 */
-	var name string
-	fmt.Print("Masukkan nama proyek yang ingin dihapus: ")
-	fmt.Scan(&name)
+	var id int
+	fmt.Print("Masukkan ID proyek yang ingin dihapus: ")
+	fmt.Scan(&id)
 
 	found := false
 	for i := 0; i < currentIndex; i++ {
-		if listProyeks[i].Name == name {
+		if listProyeks[i].ID == id {
 			for j := i; j < currentIndex-1; j++ {
 				listProyeks[j] = listProyeks[j+1]
 			}
 			currentIndex--
 			fmt.Println("Proyek berhasil dihapus.")
 			found = true
-			break
 		}
 	}
 	if !found {
@@ -218,7 +220,7 @@ func searchProject() {
 		InsertionSortByName(listProyeks[:currentIndex], currentIndex)
 		idx := binarySearchByName(keyword)
 		if idx != -1 {
-			cetak(listProyeks[idx].Name, listProyeks[idx].Kategori, listProyeks[idx].Donasi, listProyeks[idx].TotalDonatur, listProyeks[idx].TargetDonasi)
+			cetak(listProyeks[idx].ID, listProyeks[idx].Name, listProyeks[idx].Kategori, listProyeks[idx].Donasi, listProyeks[idx].TotalDonatur, listProyeks[idx].TargetDonasi)
 		} else {
 			fmt.Println("Proyek tidak ditemukan.")
 		}
@@ -240,7 +242,7 @@ func sequentialSearchByName(keyword string) {
 	for i := 0; i < currentIndex; i++ {
 		nama := strings.ToLower(listProyeks[i].Name)
 		if nama == keyword {
-			cetak(listProyeks[i].Name, listProyeks[i].Kategori, listProyeks[i].Donasi, listProyeks[i].TotalDonatur, listProyeks[i].TargetDonasi)
+			cetak(listProyeks[i].ID, listProyeks[i].Name, listProyeks[i].Kategori, listProyeks[i].Donasi, listProyeks[i].TotalDonatur, listProyeks[i].TargetDonasi)
 			found = true
 		}
 	}
@@ -255,7 +257,7 @@ func sequentialSearchByKategori(kategori string) {
 	for i := 0; i < currentIndex; i++ {
 		kat := strings.ToLower(listProyeks[i].Kategori)
 		if kat == kategori {
-			cetak(listProyeks[i].Name, listProyeks[i].Kategori, listProyeks[i].Donasi, listProyeks[i].TotalDonatur, listProyeks[i].TargetDonasi)
+			cetak(listProyeks[i].ID, listProyeks[i].Name, listProyeks[i].Kategori, listProyeks[i].Donasi, listProyeks[i].TotalDonatur, listProyeks[i].TargetDonasi)
 			found = true
 		}
 	}
@@ -293,18 +295,18 @@ func binarySearchByKategori(keyword string) {
 		mid := (left + right) / 2
 		categories := strings.ToLower(listProyeks[mid].Kategori)
 		if categories == keyword {
-			cetak(listProyeks[mid].Name, listProyeks[mid].Kategori, listProyeks[mid].Donasi, listProyeks[mid].TotalDonatur, listProyeks[mid].TargetDonasi)
+			cetak(listProyeks[mid].ID, listProyeks[mid].Name, listProyeks[mid].Kategori, listProyeks[mid].Donasi, listProyeks[mid].TotalDonatur, listProyeks[mid].TargetDonasi)
 			found = true
 
 			i := mid - 1
 			for i >= 0 && strings.ToLower(listProyeks[i].Kategori) == keyword {
-				cetak(listProyeks[i].Name, listProyeks[i].Kategori, listProyeks[i].Donasi, listProyeks[i].TotalDonatur, listProyeks[i].TargetDonasi)
+				cetak(listProyeks[i].ID, listProyeks[i].Name, listProyeks[i].Kategori, listProyeks[i].Donasi, listProyeks[i].TotalDonatur, listProyeks[i].TargetDonasi)
 				i--
 			}
 
 			i = mid + 1
 			for i < currentIndex && strings.ToLower(listProyeks[i].Kategori) == keyword {
-				cetak(listProyeks[i].Name, listProyeks[i].Kategori, listProyeks[i].Donasi, listProyeks[i].TotalDonatur, listProyeks[i].TargetDonasi)
+				cetak(listProyeks[i].ID, listProyeks[i].Name, listProyeks[i].Kategori, listProyeks[i].Donasi, listProyeks[i].TotalDonatur, listProyeks[i].TargetDonasi)
 				i++
 			}
 
@@ -427,8 +429,9 @@ func menu() {
 	fmt.Print("Pilih menu: ")
 }
 
-func cetak(name string, kategori string, totalDonasi float64, totalDonatur int, targetDonasi float64) {
+func cetak(id int, name string, kategori string, totalDonasi float64, totalDonatur int, targetDonasi float64) {
 	fmt.Println("===================================")
+	fmt.Println("ID Proyek     :", id)
 	fmt.Println("Nama Proyek   :", name)
 	fmt.Println("Kategori      :", strings.Title(kategori))
 	fmt.Printf("Total Donasi  : Rp%.0f\n", totalDonasi)
@@ -444,7 +447,7 @@ func tampilkanSemuaProyek() {
 	}
 	for i := 0; i < currentIndex; i++ {
 		p := listProyeks[i]
-		cetak(p.Name, p.Kategori, p.Donasi, p.TotalDonatur, p.TargetDonasi)
+		cetak(p.ID, p.Name, p.Kategori, p.Donasi, p.TotalDonatur, p.TargetDonasi)
 	}
 }
 
@@ -453,7 +456,7 @@ func tampilkanProyekSukses() {
 	fmt.Println("=== Proyek yang Mencapai Target Donasi ===")
 	for i := 0; i < currentIndex; i++ {
 		if listProyeks[i].Donasi >= listProyeks[i].TargetDonasi {
-			cetak(listProyeks[i].Name, listProyeks[i].Kategori, listProyeks[i].Donasi, listProyeks[i].TotalDonatur, listProyeks[i].TargetDonasi)
+			cetak(listProyeks[i].ID, listProyeks[i].Name, listProyeks[i].Kategori, listProyeks[i].Donasi, listProyeks[i].TotalDonatur, listProyeks[i].TargetDonasi)
 			found = true
 		}
 	}
