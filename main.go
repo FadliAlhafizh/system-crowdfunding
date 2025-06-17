@@ -21,10 +21,18 @@ var currentID = 1
 var listProyeks [MAXPROYEK]proyek
 
 func isKategori(kategori string) bool {
+	/*
+	 * memberikan penilaian string kategori berdasarkan kesehatan, pendidikan, pendanaan.
+	 */
 	return kategori == "kesehatan" || kategori == "pendidikan" || kategori == "pendanaan"
 }
 
 func addProyek(name *string, kategori *string, targetDonasi *float64) {
+	/*
+	 * menambahkan proyek berdasarkan nama, memilih kategori dengan
+	 * memilih no 1. kesehatan 2. pendidikan dan 3. pendanaan dan juga
+	 * menentukan target donasi.
+	 */
 	fmt.Println("Masukkan Nama Proyek: ")
 	fmt.Scan(name)
 
@@ -71,6 +79,9 @@ func addProyek(name *string, kategori *string, targetDonasi *float64) {
 }
 
 func editProyek() {
+	/*
+	 * mengubah proyek berdasarkan nama, dapat merubah nama, kategori serta mengubah target donasi
+	 */
 	var name, kategori string
 	var targetDonasi float64
 
@@ -85,7 +96,9 @@ func editProyek() {
 			fmt.Print("Masukkan nama baru: ")
 			fmt.Scan(&name)
 
-			for {
+			foundKategori := false
+
+			for !foundKategori {
 				var pilihanKategori int
 				fmt.Println("Pilih kategori baru:")
 				fmt.Println("1. Kesehatan")
@@ -96,13 +109,13 @@ func editProyek() {
 
 				if pilihanKategori == 1 {
 					kategori = "kesehatan"
-					break
+					foundKategori = true
 				} else if pilihanKategori == 2 {
 					kategori = "pendidikan"
-					break
+					foundKategori = true
 				} else if pilihanKategori == 3 {
 					kategori = "pendanaan"
-					break
+					foundKategori = true
 				} else {
 					fmt.Println("Kategori tidak valid.")
 				}
@@ -124,6 +137,9 @@ func editProyek() {
 }
 
 func deleteProyek() {
+	/*
+	 * menghapus proyek berdasarkan nama yang ingin dihapus
+	 */
 	var name string
 	fmt.Print("Masukkan nama proyek yang ingin dihapus: ")
 	fmt.Scan(&name)
@@ -146,6 +162,10 @@ func deleteProyek() {
 }
 
 func donasiProyek(name *string, donasi float64) {
+	/*
+	 * melakukan donasi kepada proyek berdasarkan nama,
+	 * input donasi dan perhitungan otomatis total donatur
+	 */
 	fmt.Print("Masukkan Nama Proyek: ")
 	fmt.Scan(name)
 
@@ -164,6 +184,10 @@ func donasiProyek(name *string, donasi float64) {
 }
 
 func searchProject() {
+	/*
+	 * melakukan search berdasarkan nama dan kategori
+	 * menggunakan sequential search atau binary search
+	 */
 	var metode int
 	var keyword string
 
@@ -171,7 +195,7 @@ func searchProject() {
 	fmt.Println("1. Cari berdasarkan NAMA (Sequential Search)")
 	fmt.Println("2. Cari berdasarkan KATEGORI (Sequential Search)")
 	fmt.Println("3. Cari berdasarkan NAMA (Binary Search)")
-	fmt.Println("3. Cari berdasarkan KATEGORI (KATEGORI Search)")
+	fmt.Println("4. Cari berdasarkan KATEGORI (KATEGORI Search)")
 	fmt.Print("Pilihan Anda: ")
 	fmt.Scan(&metode)
 
@@ -199,17 +223,14 @@ func searchProject() {
 			fmt.Println("Proyek tidak ditemukan.")
 		}
 	case 4:
-		fmt.Print("Masukkan nama proyek: ")
+		fmt.Print("Masukkan kategori (kesehatan/pendidikan/pendanaan): ")
 		fmt.Scan(&keyword)
-		InsertionSortByKategori(listProyeks[:currentIndex], currentIndex)
-		idx := binarySearchByKategori(keyword)
-		if idx != -1 {
-			cetak(listProyeks[idx].Name, listProyeks[idx].Kategori, listProyeks[idx].Donasi, listProyeks[idx].TotalDonatur, listProyeks[idx].TargetDonasi)
+		if isKategori(keyword) {
+			InsertionSortByKategori(listProyeks[:currentIndex], currentIndex)
+			binarySearchByKategori(keyword)
 		} else {
-			fmt.Println("Proyek tidak ditemukan.")
+			fmt.Println("Kategori tidak valid.")
 		}
-	default:
-		fmt.Println("Pilihan tidak valid.")
 	}
 }
 
@@ -262,23 +283,39 @@ func binarySearchByName(keyword string) int {
 	return -1
 }
 
-func binarySearchByKategori(keyword string) int {
+func binarySearchByKategori(keyword string) {
 	var left, right int
 	left = 0
 	right = currentIndex - 1
+	found := false
 
-	for left <= right {
-		var mid int
-		mid = (left + right) / 2
-		if listProyeks[mid].Kategori == keyword {
-			return mid
-		} else if listProyeks[mid].Kategori < keyword {
+	for left <= right && !found {
+		mid := (left + right) / 2
+		categories := strings.ToLower(listProyeks[mid].Kategori)
+		if categories == keyword {
+			cetak(listProyeks[mid].Name, listProyeks[mid].Kategori, listProyeks[mid].Donasi, listProyeks[mid].TotalDonatur, listProyeks[mid].TargetDonasi)
+			found = true
+
+			i := mid - 1
+			for i >= 0 && strings.ToLower(listProyeks[i].Kategori) == keyword {
+				cetak(listProyeks[i].Name, listProyeks[i].Kategori, listProyeks[i].Donasi, listProyeks[i].TotalDonatur, listProyeks[i].TargetDonasi)
+				i--
+			}
+
+			i = mid + 1
+			for i < currentIndex && strings.ToLower(listProyeks[i].Kategori) == keyword {
+				cetak(listProyeks[i].Name, listProyeks[i].Kategori, listProyeks[i].Donasi, listProyeks[i].TotalDonatur, listProyeks[i].TargetDonasi)
+				i++
+			}
+
+			break
+		} else if categories < keyword {
 			left = mid + 1
 		} else {
 			right = mid - 1
 		}
 	}
-	return -1
+
 }
 
 func SelectionSortByRaised(projects []proyek) {
