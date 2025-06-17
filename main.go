@@ -197,7 +197,7 @@ func searchProject() {
 	fmt.Println("1. Cari berdasarkan NAMA (Sequential Search)")
 	fmt.Println("2. Cari berdasarkan KATEGORI (Sequential Search)")
 	fmt.Println("3. Cari berdasarkan NAMA (Binary Search)")
-	fmt.Println("4. Cari berdasarkan KATEGORI (Binary Search)")
+	fmt.Println("3. Cari berdasarkan KATEGORI (KATEGORI Search)")
 	fmt.Print("Pilihan Anda: ")
 	fmt.Scan(&metode)
 
