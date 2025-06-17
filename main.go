@@ -25,10 +25,13 @@ func isKategori(kategori string) bool {
 }
 
 func addProyek(name *string, kategori *string, targetDonasi *float64) {
+	var found bool
 	fmt.Println("Masukkan Nama Proyek: ")
 	fmt.Scan(name)
 
-	for {
+	found = false
+
+	for !found {
 		var pilihanKategori int
 		fmt.Println("Pilih kategori:")
 		fmt.Println("1. Kesehatan")
@@ -40,18 +43,17 @@ func addProyek(name *string, kategori *string, targetDonasi *float64) {
 		switch pilihanKategori {
 		case 1:
 			*kategori = "kesehatan"
-			break
+			found = true
 		case 2:
 			*kategori = "pendidikan"
-			break
+			found = true
 		case 3:
 			*kategori = "pendanaan"
-			break
+			found = true
 		default:
 			fmt.Println("Pilihan tidak valid.")
-			continue
+			found = false
 		}
-		break
 	}
 
 	fmt.Print("Masukkan Target Donasi: ")
@@ -85,7 +87,9 @@ func editProyek() {
 			fmt.Print("Masukkan nama baru: ")
 			fmt.Scan(&name)
 
-			for {
+			foundKategori := false
+
+			for !foundKategori {
 				var pilihanKategori int
 				fmt.Println("Pilih kategori baru:")
 				fmt.Println("1. Kesehatan")
@@ -96,13 +100,13 @@ func editProyek() {
 
 				if pilihanKategori == 1 {
 					kategori = "kesehatan"
-					break
+					foundKategori = true
 				} else if pilihanKategori == 2 {
 					kategori = "pendidikan"
-					break
+					foundKategori = true
 				} else if pilihanKategori == 3 {
 					kategori = "pendanaan"
-					break
+					foundKategori = true
 				} else {
 					fmt.Println("Kategori tidak valid.")
 				}
@@ -137,7 +141,6 @@ func deleteProyek() {
 			currentIndex--
 			fmt.Println("Proyek berhasil dihapus.")
 			found = true
-			break
 		}
 	}
 	if !found {
