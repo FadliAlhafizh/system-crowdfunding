@@ -141,7 +141,7 @@ func editProyek() {
 
 func deleteProyek() {
 	/*
-	 * menghapus proyek berdasarkan nama yang ingin dihapus
+	 * menghapus proyek berdasarkan ID yang ingin dihapus
 	 */
 	var id int
 	fmt.Print("Masukkan ID proyek yang ingin dihapus: ")
@@ -325,7 +325,7 @@ func SelectionSortByRaised(projects []proyek) {
 	for i := 0; i < n-1; i++ {
 		maxIdx := i
 		for j := i + 1; j < n; j++ {
-			if projects[j].TargetDonasi > projects[maxIdx].TargetDonasi {
+			if projects[j].Donasi > projects[maxIdx].Donasi {
 				maxIdx = j
 			}
 		}
@@ -374,7 +374,7 @@ func InsertionSortByRaised(proyek []proyek, n int) {
 	for i := 1; i < n; i++ {
 		idx := proyek[i]
 		j := i - 1
-		for j >= 0 && proyek[j].TargetDonasi < idx.TargetDonasi {
+		for j >= 0 && proyek[j].Donasi < idx.Donasi {
 			proyek[j+1] = proyek[j]
 			j--
 		}
@@ -396,9 +396,9 @@ func InsertionSortByDonors(proyek []proyek, n int) {
 
 func sortingMenu() {
 	var pilih int
-	fmt.Println("1. Urutkan berdasarkan Target Donasi(SelectionSort) ")
+	fmt.Println("1. Urutkan berdasarkan Donasi Terkumpul(SelectionSort) ")
 	fmt.Println("2. Urutkan berdasarkan Total Donatur(SelectionSort) ")
-	fmt.Println("3. Urutkan berdasarkan Total Donasi(InsertionSort) ")
+	fmt.Println("3. Urutkan berdasarkan Donasi Terkumpul(InsertionSort) ")
 	fmt.Println("4. Urutkan berdasarkan Total Donatur(InsertionSort) ")
 	fmt.Scan(&pilih)
 
